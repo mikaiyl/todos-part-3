@@ -55,6 +55,8 @@ class App extends Component {
                 completed: false
             }
             this.addTodo( newTodo )
+
+            e.target.value = ''
         }
     }
 
