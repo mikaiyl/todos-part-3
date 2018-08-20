@@ -24,7 +24,7 @@ class TodoItem extends Component {
         return (
             <li className={ this.props.class }>
                 <div className="view" id={ this.props.id }>
-                    <input type="checkbox" name="checkbox" className="toggle" onClick={ this.toggleComplete } checked={ this.props.completed } />
+                    <input type="checkbox" name="checkbox" className="toggle" onChange={ this.toggleComplete } checked={ this.props.completed } />
                     <label>{ this.props.label }</label>
                     <button className="destroy" onClick={ this.destroy } ></button>
                 </div>
@@ -33,14 +33,4 @@ class TodoItem extends Component {
     }
 }
 
-class TodoList extends Component {
-    render() {
-        return (
-            this.props.todos.map( todo =>
-                <TodoItem class={ todo.completed ? "completed" : "" } label={ todo.title } id={ todo.id } userId={ todo.userId } hoistId={ this.props.hoistId } hoistEvent={ this.props.hoistEvent } completed={ todo.completed } />
-            )
-        )
-    }
-}
-
-export default TodoList
+export default TodoItem

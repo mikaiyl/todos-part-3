@@ -1,7 +1,11 @@
 import React, { Component } from 'react'
+import { Link, Route, Switch } from 'react-router-dom'
+
 import './App.css'
+import './index.css'
+
 import todoList from './todos.json'
-import TodoList from './Todo'
+import TodoList from './TodoList.jsx'
 
 class App extends Component {
 
@@ -16,8 +20,8 @@ class App extends Component {
     }
 
     hoistEvent( e ) {
-       if ( e.target.checked ) {
-           // e.target.parentElement.parentElement.classList.add( 'completed' )
+        if ( e.target.checked ) {
+            // e.target.parentElement.parentElement.classList.add( 'completed' )
             this.setState( { todos:
                 this.state.todos.map( todo => {
                     if( parseInt(e.target.parentElement.id, 10) === todo.id ) {
@@ -27,7 +31,7 @@ class App extends Component {
                     return todo
                 } )
             } )
-       } else {
+        } else {
             this.setState( { todos:
                 this.state.todos.map( todo => {
                     if( parseInt(e.target.parentElement.id, 10) === todo.id ) {
@@ -37,8 +41,8 @@ class App extends Component {
                     return todo
                 } )
             } )
-           // e.target.parentElement.parentElement.classList.remove( 'completed' )
-       }
+            // e.target.parentElement.parentElement.classList.remove( 'completed' )
+        }
 
     }
 
@@ -47,7 +51,7 @@ class App extends Component {
     }
 
     handleEnter( e ) {
-        if( e.key === 'Enter' ) {
+        if( e.key === 'Enter' && e.target.value !== '' ) {
             const newTodo = {
                 id: this.state.currentTodoIndex,
                 userId: 1,
@@ -76,51 +80,48 @@ class App extends Component {
                 <section className="todoapp">
                     <header className="header">
                         <h1>todos</h1>
-                <input className="new-todo" placeholder="What needs to be done?" onKeyPress={ this.handleEnter } autoFocus />
-                </header>
-                {
-                    //    <!-- This section should be hidden by default and shown when there are todos -->
-                }
-                <section className="main">
-                    <ul className="todo-list">
-                        {
-                            //<!-- These are here just to show the structure of the list items -->
-                            //<!-- List items should get the class `editing` when editing and `completed` when marked as completed -->
-                            <TodoList todos={ this.state.todos } hoistId={ this.removeTodo } add={ this.state.addTodo } hoistEvent={ this.hoistEvent }/>
-                                /*
-                                <li className="completed">
-                                <div className="view">
-                                <input className="toggle" type="checkbox" checked />
-                                <label>Taste JavaScript</label>
-                                <button className="destroy"></button>
-                                </div>
-                                </li>
-                                <li>
-                                <div className="view">
-                                <input className="toggle" type="checkbox" />
-                                <label>Buy a unicorn</label>
-                                <button className="destroy"></button>
-                                </div>
-                                </li> */}
-                            </ul>
-                </section>
-                {
-                    //<!-- This footer should hidden by default and shown when there are todos -->
-                }
-                <footer className="footer">
-                    {
-                        //   <!-- This should be `0 items left` by default -->
-                    }
-                    <span className="todo-count"><strong>{ this.state.todos.length - this.state.todos.filter( todo => todo.completed === true ).length }</strong> item(s) left</span>
-                {
-                    //    <!-- Remove this if you don't implement routing -->
-                    //    <!-- Hidden if no completed items are left ↓ -->
-                }
-                <button onClick={ this.clearCompleted } className="clear-completed">Clear completed</button>
-                </footer>
-                </section>
+                        <input className="new-todo" placeholder="What needs to be done?" onKeyPress={ this.handleEnter } autoFocus />
+                    </header>
 
-                </div>
+                    <section className="main">
+
+                        <ul className="todo-list">
+                            <Switch>
+                                <Route exact path='/' hash='#/'
+                                    render={ ( props ) => <TodoList todos={ this.state.todos } hoistId={ this.removeTodo } add={ this.state.addTodo } hoistEvent={ this.hoistEvent }/> }
+                                />
+
+                                <Route path='/active/'
+                                    render={ ( props ) => <TodoList todos={ this.state.todos.filter( todo => todo.completed === false ) } hoistId={ this.removeTodo } add={ this.state.addTodo } hoistEvent={ this.hoistEvent }/> }
+                                />
+
+                                <Route path='/completed/'
+                                    render={ ( props ) => <TodoList todos={ this.state.todos.filter( todo => todo.completed === true ) } hoistId={ this.removeTodo } add={ this.state.addTodo } hoistEvent={ this.hoistEvent }/> }
+                                />
+
+                            </Switch>
+                        </ul>
+                    </section>
+
+                    <footer className="footer">
+                        <span className="todo-count"><strong>{ this.state.todos.length - this.state.todos.filter( todo => todo.completed === true ).length }</strong> item(s) left</span>
+                        <ul className="filters">
+                            <li>
+                                <Link to='/'>All</Link>
+                            </li>
+                           <li>
+                                <Link to="/active/">Active</Link>
+                            </li>
+                            <li>
+                                <Link to="/completed/">Completed</Link>
+                        </li>
+                    </ul>
+
+                    <button onClick={ this.clearCompleted } className="clear-completed">Clear completed</button>
+
+                    </footer>
+                </section>
+            </div>
         );
     }
 }
